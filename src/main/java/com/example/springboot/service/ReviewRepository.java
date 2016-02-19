@@ -21,9 +21,9 @@ import com.example.springboot.domain.Review;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
 
-interface ReviewRepository extends Repository<Review, Long> {
+public interface ReviewRepository extends CrudRepository<Review, Long> {
 
 	Page<Review> findByHotel(Hotel hotel, Pageable pageable);
 

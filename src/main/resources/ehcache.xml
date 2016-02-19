@@ -4,11 +4,10 @@
 <ehcache>
 
     <!-- DiskStore path -->
-    <diskStore path="java.io.tmpdir/springbootdemo1" />
+    <diskStore path="java.io.tmpdir/springbootdemo9500" />
 
 
     <!-- Cluster localhost setting -->
-    <!--
     <cacheManagerPeerProviderFactory
         class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
         properties="peerDiscovery=automatic,
@@ -41,7 +40,6 @@
                         replicateRemovals=true "/>
 	</defaultCache>
 
-    -->
 
 
 
@@ -52,7 +50,7 @@
         2. Note that the "eternal" attribute, when set to "true", overrides timeToLive and timeToIdle so that
            no expiration can take place.
     -->
-    <defaultCache
+    <!--<defaultCache
             maxElementsInMemory="10000"
             eternal="false"
             timeToIdleSeconds="120"
@@ -61,12 +59,12 @@
             maxElementsOnDisk="10000000"
             diskPersistent="false"
             diskExpiryThreadIntervalSeconds="120"
-            memoryStoreEvictionPolicy="LRU"/>
+            memoryStoreEvictionPolicy="LRU"/>-->
 
 
     <!-- Region: myCache.hibernateCache -->
 
-    <cache name="myCache.hibernateCache.org.hibernate.cache.spi.UpdateTimestampsCache"
+    <!--<cache name="myCache.hibernateCache.org.hibernate.cache.spi.UpdateTimestampsCache"
            maxElementsInMemory="50000"
            eternal="true"
            overflowToDisk="true"/>
@@ -80,7 +78,7 @@
            diskPersistent="false"
            diskExpiryThreadIntervalSeconds="120"
            memoryStoreEvictionPolicy="LRU"
-    />
+    />-->
 
 
 

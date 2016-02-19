@@ -16,14 +16,14 @@
 
 package com.example.springboot.domain;
 
+import org.springframework.util.Assert;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.*;
-
-import org.springframework.util.Assert;
-
 @Entity
+@Cacheable
 public class Review implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -118,5 +118,19 @@ public class Review implements Serializable {
 
 	public void setDetails(String details) {
 		this.details = details;
+	}
+
+	@Override
+	public String toString() {
+		return "Review{" +
+				"id=" + id +
+				", hotel=" + hotel +
+				", index=" + index +
+				", rating=" + rating +
+				", checkInDate=" + checkInDate +
+				", tripType=" + tripType +
+				", title='" + title + '\'' +
+				", details='" + details + '\'' +
+				'}';
 	}
 }
