@@ -16,6 +16,7 @@
 
 package com.example.springboot.domain;
 
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.NaturalId;
 
+@Cacheable
 @Entity
 public class Hotel implements Serializable {
 

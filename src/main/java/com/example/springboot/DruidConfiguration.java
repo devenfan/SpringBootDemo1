@@ -18,12 +18,12 @@ import java.sql.SQLException;
 @Configuration
 public class DruidConfiguration {
 
-    @Bean
+    @Bean(name = "druidServlet")
     public ServletRegistrationBean druidServlet() {
         return new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
     }
 
-    @Bean
+    @Bean(name = "druidDataSource")
     public DataSource druidDataSource(
             @Value("${spring.datasource.driverClassName}") String driver,
             @Value("${spring.datasource.url}") String url,

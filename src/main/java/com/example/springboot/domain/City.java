@@ -16,10 +16,13 @@
 
 package com.example.springboot.domain;
 
+
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 
+@Cacheable
 @Entity
 public class City implements Serializable {
 
