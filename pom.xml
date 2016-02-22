@@ -18,6 +18,35 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
+	<profiles>
+		<!-- 定义dev profile -->
+		<profile>
+			<id>dev</id>
+			<properties>
+				<!-- 
+					定义profileActive属性，属性值为dev，在使用mvn -P dev打包的时候，
+					profileActive=dev属性生效，将会替换配置文件中${profileActive}变量为dev
+				 -->
+				<profileActive>dev</profileActive>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>app1</id>
+			<properties>
+				<profileActive>app1</profileActive>
+			</properties>
+		</profile>	
+		<profile>
+			<id>app2</id>
+			<properties>
+				<profileActive>app2</profileActive>
+			</properties>
+		</profile>
+	</profiles>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.7</java.version>
@@ -146,6 +175,46 @@
 	</dependencies>
 	
 	<build>
+		<resources>
+			<!-- <resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>application-app.properties</exclude>
+					<exclude>application-dev.properties</exclude>
+					<exclude>application.properties</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<filtering>true</filtering>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>application.properties</include>
+					<include>application-${profileActive}.properties</include>
+				</includes>
+			</resource> -->
+			
+			<resource>
+				<!-- 打包时需要特殊处理的文件 -->
+				<directory>src/main/resources</directory>
+				<!-- 打包时需要对文件进行变量替换 -->
+				<filtering>true</filtering>
+				<!-- 打包时不需要包含的文件 -->
+				<excludes>
+					<exclude>app/*</exclude>
+					<exclude>dev/*</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<!-- 打包时包含该目录下文件，其中${profileActive}会根据打包时的参数动态替换 -->
+				<!-- 
+					maven打包时的命令为 :mvn clean package -Dmaven.test.skip=true -P app1 -e 
+					该命令会将src/main/resources/app1目录下的文件打包
+					若需要src/main/resources/app2目录下的配置文件，需要将命令中的app1改为app2
+				-->
+				<directory>src/main/resources/${profileActive}</directory>
+			</resource>
+		</resources>	
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
