@@ -4,7 +4,7 @@
 <ehcache>
 
     <!-- DiskStore path -->
-    <diskStore path="java.io.tmpdir/springbootdemo9500" />
+    <diskStore path="java.io.tmpdir/springbootdemo9500_app2" />
 
 
     <!-- Cluster localhost setting -->
