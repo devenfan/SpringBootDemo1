@@ -18,38 +18,15 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
-	<profiles>
-		<!-- 定义dev profile -->
-		<profile>
-			<id>dev</id>
-			<properties>
-				<!-- 
-					定义profileActive属性，属性值为dev，在使用mvn -P dev打包的时候，
-					profileActive=dev属性生效，将会替换配置文件中${profileActive}变量为dev
-				 -->
-				<profileActive>dev</profileActive>
-			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-		<profile>
-			<id>app1</id>
-			<properties>
-				<profileActive>app1</profileActive>
-			</properties>
-		</profile>	
-		<profile>
-			<id>app2</id>
-			<properties>
-				<profileActive>app2</profileActive>
-			</properties>
-		</profile>
-	</profiles>
-
 	<properties>
+		<!-- SpringBoot相关属性定义 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.7</java.version>
+
+		<!-- Plugin相关属性定义 -->
+		<jdk.version>1.7</jdk.version>
+		<source.encoding>UTF-8</source.encoding>
+		<dist.home>./dist</dist.home>
 	</properties>
 
 	<dependencies>
@@ -173,6 +150,38 @@
 
 
 	</dependencies>
+
+
+
+
+	<profiles>
+		<!-- 定义dev profile -->
+		<profile>
+			<id>dev</id>
+			<properties>
+				<!--
+					定义profileActive属性，属性值为dev，在使用mvn -P dev打包的时候，
+					profileActive=dev属性生效，将会替换配置文件中${profileActive}变量为dev
+				 -->
+				<profileActive>dev</profileActive>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>app1</id>
+			<properties>
+				<profileActive>app1</profileActive>
+			</properties>
+		</profile>
+		<profile>
+			<id>app2</id>
+			<properties>
+				<profileActive>app2</profileActive>
+			</properties>
+		</profile>
+	</profiles>
 	
 	<build>
 		<resources>
@@ -202,7 +211,8 @@
 				<filtering>true</filtering>
 				<!-- 打包时不需要包含的文件 -->
 				<excludes>
-					<exclude>app/*</exclude>
+					<exclude>app1/*</exclude>
+					<exclude>app2/*</exclude>
 					<exclude>dev/*</exclude>
 				</excludes>
 			</resource>
@@ -215,12 +225,93 @@
 				-->
 				<directory>src/main/resources/${profileActive}</directory>
 			</resource>
-		</resources>	
+		</resources>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<!-- 使用 Compile-Plugin 进行代码编译 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<!--<version>3.5.1</version>-->
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<encoding>${source.encoding}</encoding>
+					<!-- <compilerArgs>
+                        <arg>-verbose</arg>
+                        <arg>-Xlint:all,-options,-path</arg>
+                    </compilerArgs> -->
+					<compilerArguments>
+						<!-- <verbose /> -->
+						<bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
+					</compilerArguments>
+				</configuration>
+			</plugin>
+
+			<!-- 使用  maven-resources-plugin 进行资源拷贝 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<!-- 指定编码格式，否则在DOS下运行mvn命令时当发生文件资源copy时将使用系统默认使用GBK编码 -->
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+
+			<!-- 使用AntRun-Plugin进行Ant任务调用 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+
+				<executions>
+					<execution>
+						<id>copy-jar</id>
+						<phase>package</phase>
+						<configuration>
+							<tasks>
+								<delete dir="${dist.home}/${project.name}-${profileActive}.jar" verbose="true" />
+								<copy tofile="${dist.home}/${project.name}-${profileActive}.jar"
+									  file="${project.basedir}/target/${project.name}-${project.version}.jar" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>delete-jar</id>
+						<phase>clean</phase>
+						<configuration>
+							<tasks>
+								<delete dir="${dist.home}/${project.name}-${profileActive}.jar" verbose="true" />
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+
+				</executions>
+
+				<dependencies>
+					<dependency>
+						<groupId>ant</groupId>
+						<artifactId>ant-junit</artifactId>
+						<version>1.6.2</version>
+					</dependency>
+				</dependencies>
+
+			</plugin>
+
 		</plugins>
 	</build>
 	
